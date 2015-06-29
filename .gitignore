@@ -69,3 +69,5 @@ target/
 out
 gen
 
+
+db.sqlite3
