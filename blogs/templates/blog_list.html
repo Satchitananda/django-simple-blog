@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  <script type="text/javascript">
+    var url = "{% url "blog_list" %}";
+    $(function(){
+      $(".subscribe").click(function(){
+        var subscribe = $(this).is(":checked");
+        var data = {
+          'blog_id': $(this).attr('id'),
+          'subscribe': subscribe,
+          'csrfmiddlewaretoken': getCookie('csrftoken')
+        };
+        $.post(url, data, function(result){
+          if (result == 'ok') {
+            if (subscribe) {
+              alert('Вы успешно подписались');
+            } else {
+              alert('Вы успешно отписались');
+            }
+          }
+        });
+      });
+    });
+  </script>
+{% endblock %}
+
+{% block content %}
+    {% csrf_token %}
+    {% for user in users %}
+    <div class="blog">
+      <label>{{ user.blog.title }} | <input type="checkbox" class="subscribe" id="{{ user.blog.id }}"{% if user.blog.id in user_subscription_ids %} checked{% endif %}> подписаться</label><br />
+    </div>
+    {% endfor %}
+{% endblock %}

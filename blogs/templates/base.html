@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head lang="ru">
+  <meta charset="UTF-8">
+  <title>{% if page_title %}{{ page_title }} | {% endif %}Блоги</title>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+  <script type="text/javascript">
+    // using jQuery
+    function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+            var cookies = document.cookie.split(';');
+            for (var i = 0; i < cookies.length; i++) {
+                var cookie = jQuery.trim(cookies[i]);
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+  </script>
+  {% block extrahead %}
+  {% endblock %}
+</head>
+<body>
+  {% block messages %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="messages">
+          <div class="col-md-12">
+            <h4>{% if message.tags == 'success' %}Успех!{% elif message.tags == 'warning' %}Внимание!{% elif message.tags == 'error'%}Ошибка!{% endif %}</h4>
+            <p>{{ message }}</p>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endblock %}
+  {% block content %}
+  {% endblock %}
+</body>
+</html>

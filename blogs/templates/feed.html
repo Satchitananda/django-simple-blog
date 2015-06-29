@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+  <style type="text/css">
+    h2 {
+      display: inline-block;
+    }
+  </style>
+  <script type="text/javascript">
+    var url = "{% url "mark_as_read" %}";
+    $(function(){
+      $(".mark_as_read").click(function(){
+        var url = "{% url "mark_as_read" %}";
+        var mark_as_read = $(this).is(":checked");
+        var data = {
+          'id': $(this).attr("id"),
+          'mark_as_read': mark_as_read,
+          'csrfmiddlewaretoken': getCookie('csrftoken')
+        };
+
+        $.post(url, data, function(result) {
+          if (result == 'ok' && mark_as_read) {
+            alert('Запись помечена как прочитанная');
+          } else if (result == 'ok') {
+            alert('Отметка о прочтении удалена');
+          }
+        });
+      });
+    });
+  </script>
+{% endblock %}
+
+{% block content %}
+  {% csrf_token %}
+  <h1>Добро пожаловать {{ request.user.first_name }}!</h1>
+  <p>Вы можете <a href="{% url "create" %}">создать новую запись</a> или <a href="{% url "blog_list" %}">настроить ленту</a></p>
+  {% for item in feed %}
+    <div class="entry">
+      <h2>{{ item.blog.title }} -> {{ item.title }} </h2> | {{ item.created|date:"d.m.Y H:i:s" }} | <label><input class="mark_as_read" type="checkbox" id="{{ item.id }}"/> отметить как прочитанное</label><br />
+      <p>{{ item.text }}</p>
+    </div>
+  {% endfor %}
+{% endblock %}
